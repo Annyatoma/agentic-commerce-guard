@@ -1,0 +1,26 @@
+[
+  {
+    "id": "prod_001",
+    "name": "Mechanical Keyboard",
+    "price_paise": 450000,
+    "stock": 5
+  },
+  {
+    "id": "prod_002",
+    "name": "Wireless Mouse",
+    "price_paise": 120000,
+    "stock": 10
+  },
+  {
+    "id": "prod_003",
+    "name": "USB-C Hub",
+    "price_paise": 80000,
+    "stock": 0
+  },
+  {
+    "id": "prod_004",
+    "name": "Desk Mat",
+    "price_paise": 45000,
+    "stock": 25
+  }
+]

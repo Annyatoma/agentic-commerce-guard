@@ -1,0 +1,6 @@
+{"timestamp": "2026-09-03T17:13:58.233189Z", "action": "CREATE_ORDER", "status": "APPROVED", "reason": "All gates passed.", "details": {"product_id": "prod_002", "total": 120000}}
+{"timestamp": "2026-09-03T19:27:29.867026Z", "action": "CREATE_ORDER", "status": "BLOCKED", "reason": "Price drift/hallucination: Claimed Rs.10.0, but catalog truth is Rs.1200.0.", "details": {"claimed": 1000, "truth": 120000}}
+{"timestamp": "2026-09-03T19:27:29.870379Z", "action": "CREATE_ORDER", "status": "BLOCKED", "reason": "Inventory failure: Requested 1, only 0 left for USB-C Hub.", "details": {"product_id": "prod_003", "stock": 0}}
+{"timestamp": "2026-09-03T19:27:29.871763Z", "action": "CREATE_ORDER", "status": "BLOCKED", "reason": "Budget gate triggered: Total Rs.4500.0 exceeds safety cap of Rs.2000.0.", "details": {"total": 450000, "cap": 200000}}
+{"timestamp": "2026-09-03T19:27:29.874642Z", "action": "CREATE_ORDER", "status": "APPROVED", "reason": "All gates passed.", "details": {"product_id": "prod_004", "total": 45000}}
+{"timestamp": "2026-09-03T19:27:29.876283Z", "action": "CREATE_ORDER", "status": "BLOCKED", "reason": "Duplicate execution blocked: Receipt rcpt_unique_999 was already processed.", "details": {"receipt_id": "rcpt_unique_999"}}
