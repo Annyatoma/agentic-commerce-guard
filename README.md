@@ -74,56 +74,59 @@ Prerequisites:
 Installation
 Clone the repository:
 
-git clone-  https://github.com/Annyatoma/agentic-commerce-guard.git
+git clone-  **https://github.com/Annyatoma/agentic-commerce-guard.git**
 
-cd agentic-commerce-guard
+**cd agentic-commerce-guard**
 
 Create and activate virtual environment:
 
-python -m venv venv
+**python -m venv venv**
 
-Windows PowerShell:  .\venv\Scripts\Activate.ps1
+Windows PowerShell:  **.\venv\Scripts\Activate.ps1**
 
-macOS/Linux:  source venv/bin/activate
+macOS/Linux:  **source venv/bin/activate**
 
 Install dependencies:
 
-pip install -r requirements.txt
+**pip install -r requirements.txt**
 
 Configure Environment Variables:
 
 Create a .env file in the root directory:
 
-RAZORPAY_KEY_ID=rzp_test_your_key_id
-RAZORPAY_KEY_SECRET=your_razorpay_secret
-GEMINI_API_KEY=your_gemini_api_key
+**RAZORPAY_KEY_ID=rzp_test_your_key_id**
+
+**RAZORPAY_KEY_SECRET=your_razorpay_secret**
+
+**GEMINI_API_KEY=your_gemini_api_key**
 
 ## 5. Verification & Testing
 
 1. Happy-Path Agent Execution
 Runs the full autonomous purchase flow (Catalog Lookup → Price Resolution → Safety Gating → Live Razorpay Order Creation):
-Bash
-python agent.py
+
+**python agent.py**
+
 2. Edge-Case / Failure Simulation Suite
    
 Tests the 4 critical failure modes deterministically:
 
-python test_breakage.py
+**python test_breakage.py**
 
 Expected Output:
 
-Test 1 (Hallucination): Blocked due to claimed price mismatch.
+1. **Test 1 (Hallucination):** Blocked due to claimed price mismatch.
 
-Test 2 (Out of Stock): Blocked due to 0 inventory.
+2. **Test 2 (Out of Stock):** Blocked due to 0 inventory.
 
-Test 3 (Budget Cap): Blocked because amount exceeds ₹2,000 threshold.
+3. **Test 3 (Budget Cap):** Blocked because amount exceeds ₹2,000 threshold.
 
-Test 4 (Idempotency): First attempt approved; replay blocked.
+4. **Test 4 (Idempotency):** First attempt approved; replay blocked.
 
 ## 6. ProductionRoadmap
 
-Distributed State: Replace local in-memory receipt deduplication with Redis TTL-based distributed locks.
+1. **Distributed State:** Replace local in-memory receipt deduplication with Redis TTL-based distributed locks.
 
-Live Catalog Integration: Bind product validation directly to Razorpay's Item Catalog API.
+2. **Live Catalog Integration:** Bind product validation directly to Razorpay's Item Catalog API.
 
-Webhook Finalization: Consume Razorpay payment authorized/captured webhooks to update inventory asynchronously.
+3. **Webhook Finalization:** Consume Razorpay payment authorized/captured webhooks to update inventory asynchronously.
