@@ -61,7 +61,7 @@ agentic-commerce-guard/
 ├── payment_service.py    # Thin wrapper for Razorpay Test Sandbox API
 ├── guardrails.py         # Deterministic SafetyGuard middleware and audit logger
 ├── agent.py              # Autonomous Gemini function-calling agent
-├── test_breakage.py      # Edge-case verification suite ("2 AM failure test")
+├── test_breakage.py      # Edge-case verification suite 
 ├── test_connection.py    # Sandbox connectivity check
 ├── requirements.txt      # Dependency specification
 ├── audit_trail.jsonl     # Append-only execution record
