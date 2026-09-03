@@ -59,41 +59,41 @@ agentic-commerce-guard/
 ├── guardrails.py         # Deterministic SafetyGuard middleware and audit logger
 ├── agent.py              # Autonomous Gemini function-calling agent
 ├── test_breakage.py      # Edge-case verification suite ("2 AM failure test")
-├── test_connection.py    # Sandbox connectivity check
 ├── requirements.txt      # Dependency specification
 ├── audit_trail.jsonl     # Append-only execution record
 └── README.md             # Architecture and submission documentation
 
 ## 4. Setup and Local Execution
-Prerequisites
-Python 3.10+
+Prerequisites:
 
-Active Razorpay Test Sandbox Keys
-
-Google Gemini API Key
+1. Python 3.10+
+2. Active Razorpay Test Sandbox Keys
+3. Google Gemini API Key
+   
 
 Installation
 Clone the repository:
 
-Bash
-git clone https://github.com/Annyatoma/agentic-commerce-guard.git
+git clone-  https://github.com/Annyatoma/agentic-commerce-guard.git
+
 cd agentic-commerce-guard
+
 Create and activate virtual environment:
 
-Bash
 python -m venv venv
-# Windows PowerShell:
-.\venv\Scripts\Activate.ps1
-# macOS/Linux:
-source venv/bin/activate
+
+Windows PowerShell:  .\venv\Scripts\Activate.ps1
+
+macOS/Linux:  source venv/bin/activate
+
 Install dependencies:
 
-Bash
 pip install -r requirements.txt
+
 Configure Environment Variables:
+
 Create a .env file in the root directory:
 
-Ini, TOML
 RAZORPAY_KEY_ID=rzp_test_your_key_id
 RAZORPAY_KEY_SECRET=your_razorpay_secret
 GEMINI_API_KEY=your_gemini_api_key
@@ -105,16 +105,25 @@ Runs the full autonomous purchase flow (Catalog Lookup → Price Resolution → 
 Bash
 python agent.py
 2. Edge-Case / Failure Simulation Suite
+   
 Tests the 4 critical failure modes deterministically:
-Bash
+
 python test_breakage.py
+
 Expected Output:
+
 Test 1 (Hallucination): Blocked due to claimed price mismatch.
+
 Test 2 (Out of Stock): Blocked due to 0 inventory.
+
 Test 3 (Budget Cap): Blocked because amount exceeds ₹2,000 threshold.
+
 Test 4 (Idempotency): First attempt approved; replay blocked.
 
 ## 6. ProductionRoadmap
+
 Distributed State: Replace local in-memory receipt deduplication with Redis TTL-based distributed locks.
+
 Live Catalog Integration: Bind product validation directly to Razorpay's Item Catalog API.
+
 Webhook Finalization: Consume Razorpay payment authorized/captured webhooks to update inventory asynchronously.
