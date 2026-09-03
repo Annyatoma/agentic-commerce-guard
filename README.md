@@ -12,6 +12,7 @@ It mitigates the fundamental vulnerabilities of AI-driven financial execution: p
 
 ## 1. System Architecture
 
+```text
                                   [ User Intent ]
                                          │
                                          ▼
@@ -35,13 +36,14 @@ It mitigates the fundamental vulnerabilities of AI-driven financial execution: p
                   │                                                                     [ order_id Output ]
                   ▼
         [ audit_trail.jsonl (Immutable Audit) ]
+```
 
 ---
 
 ## 2. Core Guardrails Enforced
 
 | Gate | Vulnerability Addressed | Implementation Detail |
-| :--- | :--- | :--- |
+|---|---|---|
 | **Price Consistency** | LLM hallucinations or prompt injection attacks claiming lower prices. | Rejects transactions where `claimed_unit_price != catalog.price_paise`. |
 | **Inventory State** | Ordering unavailable or out-of-stock items. | Deterministic check against current stock counts prior to payment order creation. |
 | **Financial Bounding** | Runaway spending loops or unauthorized large expenditures. | Hard session cap (₹2,000 / 200,000 paise) intercepting requests before reaching payment APIs. |
@@ -52,6 +54,7 @@ It mitigates the fundamental vulnerabilities of AI-driven financial execution: p
 
 ## 3. Project Structure
 
+```text
 agentic-commerce-guard/
 │
 ├── catalog.json          # Ground-truth product catalog (pricing in paise & inventory)
@@ -59,74 +62,88 @@ agentic-commerce-guard/
 ├── guardrails.py         # Deterministic SafetyGuard middleware and audit logger
 ├── agent.py              # Autonomous Gemini function-calling agent
 ├── test_breakage.py      # Edge-case verification suite ("2 AM failure test")
+├── test_connection.py    # Sandbox connectivity check
 ├── requirements.txt      # Dependency specification
 ├── audit_trail.jsonl     # Append-only execution record
 └── README.md             # Architecture and submission documentation
+```
+
+---
 
 ## 4. Setup and Local Execution
-Prerequisites:
 
-1. Python 3.10+
-2. Active Razorpay Test Sandbox Keys
-3. Google Gemini API Key
-   
+### Prerequisites
 
-Installation
+- Python 3.10+
+- Active Razorpay Test Sandbox Keys
+- Google Gemini API Key
+
+### Installation
+
 Clone the repository:
 
-git clone-  **https://github.com/Annyatoma/agentic-commerce-guard.git**
-
-**cd agentic-commerce-guard**
+```bash
+git clone https://github.com/Annyatoma/agentic-commerce-guard.git
+cd agentic-commerce-guard
+```
 
 Create and activate virtual environment:
 
-**python -m venv venv**
-
-Windows PowerShell:  **.\venv\Scripts\Activate.ps1**
-
-macOS/Linux:  **source venv/bin/activate**
+```bash
+python -m venv venv
+# Windows PowerShell:
+.\venv\Scripts\Activate.ps1
+# macOS/Linux:
+source venv/bin/activate
+```
 
 Install dependencies:
 
-**pip install -r requirements.txt**
+```bash
+pip install -r requirements.txt
+```
 
-Configure Environment Variables:
+### Configure Environment Variables
 
-Create a .env file in the root directory:
+Create a `.env` file in the root directory:
 
-**RAZORPAY_KEY_ID=rzp_test_your_key_id**
+```ini
+RAZORPAY_KEY_ID=rzp_test_your_key_id
+RAZORPAY_KEY_SECRET=your_razorpay_secret
+GEMINI_API_KEY=your_gemini_api_key
+```
 
-**RAZORPAY_KEY_SECRET=your_razorpay_secret**
-
-**GEMINI_API_KEY=your_gemini_api_key**
+---
 
 ## 5. Verification & Testing
 
-1. Happy-Path Agent Execution
+### 1. Happy-Path Agent Execution
+
 Runs the full autonomous purchase flow (Catalog Lookup → Price Resolution → Safety Gating → Live Razorpay Order Creation):
 
-**python agent.py**
+```bash
+python agent.py
+```
 
-2. Edge-Case / Failure Simulation Suite
-   
+### 2. Edge-Case / Failure Simulation Suite
+
 Tests the 4 critical failure modes deterministically:
 
-**python test_breakage.py**
+```bash
+python test_breakage.py
+```
 
-Expected Output:
+**Expected Output:**
 
-1. **Test 1 (Hallucination):** Blocked due to claimed price mismatch.
+- **Test 1 (Hallucination):** Blocked due to claimed price mismatch.
+- **Test 2 (Out of Stock):** Blocked due to 0 inventory.
+- **Test 3 (Budget Cap):** Blocked because amount exceeds ₹2,000 threshold.
+- **Test 4 (Idempotency):** First attempt approved; replay blocked.
 
-2. **Test 2 (Out of Stock):** Blocked due to 0 inventory.
+---
 
-3. **Test 3 (Budget Cap):** Blocked because amount exceeds ₹2,000 threshold.
+## 6. Production Roadmap
 
-4. **Test 4 (Idempotency):** First attempt approved; replay blocked.
-
-## 6. ProductionRoadmap
-
-1. **Distributed State:** Replace local in-memory receipt deduplication with Redis TTL-based distributed locks.
-
-2. **Live Catalog Integration:** Bind product validation directly to Razorpay's Item Catalog API.
-
-3. **Webhook Finalization:** Consume Razorpay payment authorized/captured webhooks to update inventory asynchronously.
+- **Distributed State:** Replace local in-memory receipt deduplication with Redis TTL-based distributed locks.
+- **Live Catalog Integration:** Bind product validation directly to Razorpay's Item Catalog API.
+- **Webhook Finalization:** Consume Razorpay payment `authorized`/`captured` webhooks to update inventory asynchronously.
